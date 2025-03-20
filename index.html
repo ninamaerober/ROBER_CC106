@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Expense Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(dd.jpg) ;
+            background-size: cover;
+        }
+        .container {
+            width: 700px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+        .summary {
+            margin-bottom: 20px;
+        }
+        .transaction-form {
+            background: lightgray;
+            padding: 15px;
+            border-radius: 10px;
+            color: black;
+            margin-bottom: 20px;
+        }
+        .transaction-form input, .transaction-form select {
+            width: 96%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .transaction-form input[type="radio"] {
+            width: auto;
+        }
+        .transaction-form button {
+            width: 99%;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+           
+            font-size: 20px;
+            font-weight: bold;
+            background:lightblue;
+          
+        }
+        .transaction-form button:hover{
+            background: lightpink;
+            color: black;
+        }
+        .transaction-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .transaction-list th, .transaction-list td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="summary">
+            <h2>Monthly Expense Calculator</h2>
+            <p>Income: + P <span id="income">0.00</span></p>
+            <p>Expense: - P <span id="expense">0.00</span></p>
+            <p>Total Balance: P <span id="balance">0.00</span></p>
+        </div>
+
+        <div class="transaction-form">
+            <h3>Add Transaction</h3>
+            <input type="text" id="name" placeholder="Name">
+            <input type="text" id="category" placeholder="Category">
+            <label>
+                <input type="radio" name="type" value="income"> Income
+            </label>
+            <label>
+                <input type="radio" name="type" value="expense"> Expense
+            </label>
+            <input type="number" id="amount" placeholder="Amount">
+            <button onclick="addTransaction()">Submit</button>
+        </div>
+
+        <div class="transaction-list">
+            <h3>Transaction List:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let incomeTotal = 0;
+        let expenseTotal = 0;
+        
+        function addTransaction() {
+            let name = document.getElementById("name").value;
+            let category = document.getElementById("category").value;
+            let amount = parseFloat(document.getElementById("amount").value);
+            let type = document.querySelector('input[name="type"]:checked');
+            
+            if (!name || !category || !amount || !type) {
+                alert("Please fill in all fields.");
+                return;
+            }
+            
+            type = type.value;
+            
+            let table = document.getElementById("transactionTable");
+            let row = table.insertRow();
+            row.insertCell(0).innerText = name;
+            row.insertCell(1).innerText = category;
+            row.insertCell(2).innerText = type.charAt(0).toUpperCase() + type.slice(1);
+            row.insertCell(3).innerText = amount;
+            
+            if (type === "income") {
+                incomeTotal += amount;
+            } else {
+                expenseTotal += amount;
+            }
+            
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            let balance = incomeTotal - expenseTotal;
+            document.getElementById("income").innerText = incomeTotal.toFixed(2);
+            document.getElementById("expense").innerText = expenseTotal.toFixed(2);
+            document.getElementById("balance").innerText = balance.toFixed(2);
+        }
+    </script>
+</body>
+</html>
